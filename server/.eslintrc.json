@@ -14,10 +14,9 @@
     "ecmaVersion": 11,
     "sourceType": "module"
   },
-  "plugins": ["prettier", "@typescript-eslint", "simple-import-sort"],
+  "plugins": ["prettier", "@typescript-eslint"],
   "ignorePatterns": "build",
   "rules": {
-    "prettier/prettier": "error",
-    "simple-import-sort/sort": "warn"
+    "prettier/prettier": "error"
   }
 }
