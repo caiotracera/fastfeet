@@ -1,9 +1,11 @@
 {
   "env": {
     "es2020": true,
-    "node": true
+    "node": true,
+    "jest": true
   },
   "extends": [
+    "airbnb-base",
     "eslint:recommended",
     "plugin:prettier/recommended",
     "prettier/@typescript-eslint",
@@ -17,6 +19,19 @@
   "plugins": ["prettier", "@typescript-eslint"],
   "ignorePatterns": "build",
   "rules": {
-    "prettier/prettier": "error"
+    "prettier/prettier": "error",
+    "class-methods-use-this": "off",
+    "no-console": "off",
+    "@typescript-eslint/no-unused-vars": [
+      "error",
+      {
+        "argsIgnorePattern": "_"
+      }
+    ]
+  },
+  "settings": {
+    "import/resolver": {
+      "typescript": {}
+    }
   }
 }
