@@ -35,6 +35,14 @@ export default class DeliveriesRepository implements IDeliveriesRepository {
     return delivery;
   }
 
+  public async findByDeliveryman(deliveryman_id: string): Promise<Delivery[]> {
+    const deliveries = await this.ormRepository.find({
+      where: { deliveryman_id },
+    });
+
+    return deliveries;
+  }
+
   public async findById(delivery_id: string): Promise<Delivery | undefined> {
     const delivery = await this.ormRepository.findOne(delivery_id);
     return delivery;
