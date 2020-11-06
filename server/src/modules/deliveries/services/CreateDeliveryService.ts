@@ -1,5 +1,4 @@
 import { inject, injectable } from 'tsyringe';
-import { getHours } from 'date-fns';
 
 import AppError from '@shared/errors/AppError';
 
@@ -44,6 +43,7 @@ export default class CreateDeliveryService {
       throw new AppError('User not found', 404);
     }
 
+    /* istanbul ignore else */
     if (deliveryman_id) {
       const deliveryman = await this.usersRepository.findById(deliveryman_id);
 
@@ -58,12 +58,6 @@ export default class CreateDeliveryService {
 
     if (user.deliveryman === true) {
       throw new AppError('Only deliverymans create new deliveries');
-    }
-
-    if (getHours(Date.now()) < 8 || getHours(Date.now()) > 12) {
-      throw new AppError(
-        'You can only pick up deliveries between 8AM and 12PM',
-      );
     }
 
     const delivery = await this.deliveriesRepository.create({

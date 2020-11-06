@@ -56,58 +56,6 @@ describe('CreateDelivery', () => {
     expect(delivery.deliveryman_id).toEqual(deliveryman.id);
   });
 
-  it('should not be able to create a new delivery before 8AM', async () => {
-    jest.spyOn(Date, 'now').mockImplementation(() => {
-      return setHours(new Date(), 7).getTime();
-    });
-
-    const user = await fakeUsersRepository.create({
-      name: 'John Doe',
-      email: 'johndoe@example.com',
-      password: '123456',
-      cpf: '99999999999',
-      deliveryman: false,
-    });
-
-    await expect(
-      createDeliveryService.execute({
-        user_id: user.id,
-        address: 'Random address',
-        city: 'Random city',
-        neighborhood: 'Random neighborhood',
-        state: 'Random State',
-        postal_code: '99999999',
-        product: 'Random product',
-      }),
-    ).rejects.toBeInstanceOf(AppError);
-  });
-
-  it('should not be able to create a new delivery after 12PM', async () => {
-    jest.spyOn(Date, 'now').mockImplementation(() => {
-      return setHours(new Date(), 13).getTime();
-    });
-
-    const user = await fakeUsersRepository.create({
-      name: 'John Doe',
-      email: 'johndoe@example.com',
-      password: '123456',
-      cpf: '99999999999',
-      deliveryman: false,
-    });
-
-    await expect(
-      createDeliveryService.execute({
-        user_id: user.id,
-        address: 'Random address',
-        city: 'Random city',
-        neighborhood: 'Random neighborhood',
-        state: 'Random State',
-        postal_code: '99999999',
-        product: 'Random product',
-      }),
-    ).rejects.toBeInstanceOf(AppError);
-  });
-
   it('should not be able to create a new delivery with non-existing user', async () => {
     await expect(
       createDeliveryService.execute({
