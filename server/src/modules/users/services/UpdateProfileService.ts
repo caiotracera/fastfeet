@@ -73,6 +73,8 @@ export default class UpdateProfileService {
       user.password = await this.hashProvider.generateHash(password);
     }
 
+    await this.usersRepository.save(user);
+
     return user;
   }
 }
