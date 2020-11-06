@@ -35,6 +35,10 @@ export default class DeliveriesRepository implements IDeliveriesRepository {
     return delivery;
   }
 
+  public async save(delivery: Delivery): Promise<Delivery> {
+    return this.ormRepository.save(delivery);
+  }
+
   public async findByDeliveryman(deliveryman_id: string): Promise<Delivery[]> {
     const deliveries = await this.ormRepository.find({
       where: { deliveryman_id },

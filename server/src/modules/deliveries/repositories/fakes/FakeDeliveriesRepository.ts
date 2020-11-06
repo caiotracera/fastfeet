@@ -35,6 +35,15 @@ export default class FakeDeliveriesRepository implements IDeliveriesRepository {
     return delivery;
   }
 
+  public async save(delivery: Delivery): Promise<Delivery> {
+    const deliveryIndex = this.deliveries.findIndex(
+      eachDelivery => eachDelivery.id === delivery.id,
+    );
+
+    this.deliveries[deliveryIndex] = delivery;
+    return delivery;
+  }
+
   public async findByDeliveryman(deliveryman_id: string): Promise<Delivery[]> {
     const deliveries = this.deliveries.filter(
       delivery => delivery.deliveryman_id === deliveryman_id,

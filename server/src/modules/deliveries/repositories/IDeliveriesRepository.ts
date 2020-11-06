@@ -5,6 +5,7 @@ import IFindAllInDayFromDeliverymanDTO from '@modules/deliveries/dtos/IFindAllIn
 
 export default interface IDeliveriesRepository {
   create(data: ICreateDeliveryDTO): Promise<Delivery>;
+  save(delivery: Delivery): Promise<Delivery>;
   findAll(): Promise<Delivery[]>;
   findAllWithoutDeliveryman(): Promise<Delivery[]>;
   findById(delivery_id: string): Promise<Delivery | undefined>;
