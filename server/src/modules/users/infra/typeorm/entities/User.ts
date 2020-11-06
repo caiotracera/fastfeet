@@ -5,9 +5,11 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   DeleteDateColumn,
+  OneToMany,
 } from 'typeorm';
 
 import uploadConfig from '@config/upload';
+import Delivery from '@modules/deliveries/infra/typeorm/entities/Delivery';
 
 import { Exclude, Expose } from 'class-transformer';
 
@@ -43,6 +45,9 @@ export default class User {
 
   @DeleteDateColumn()
   deleted_at: Date;
+
+  @OneToMany(() => Delivery, delivery => delivery.deliveryman_id)
+  deliveries: string[];
 
   @Expose({ name: 'avatar_url' })
   getAvatarUrl(): string | null {
