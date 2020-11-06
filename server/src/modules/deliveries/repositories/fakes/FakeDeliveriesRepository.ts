@@ -16,6 +16,7 @@ export default class FakeDeliveriesRepository implements IDeliveriesRepository {
     neighborhood,
     postal_code,
     state,
+    deliveryman_id,
   }: ICreateDeliveryDTO): Promise<Delivery> {
     const delivery = new Delivery();
 
@@ -27,6 +28,7 @@ export default class FakeDeliveriesRepository implements IDeliveriesRepository {
       neighborhood,
       postal_code,
       state,
+      deliveryman_id,
     });
 
     this.deliveries.push(delivery);

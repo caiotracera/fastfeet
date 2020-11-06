@@ -19,6 +19,7 @@ export default class DeliveriesRepository implements IDeliveriesRepository {
     neighborhood,
     postal_code,
     state,
+    deliveryman_id,
   }: ICreateDeliveryDTO): Promise<Delivery> {
     const delivery = this.ormRepository.create({
       product,
@@ -27,6 +28,7 @@ export default class DeliveriesRepository implements IDeliveriesRepository {
       neighborhood,
       postal_code,
       state,
+      deliveryman_id,
     });
 
     await this.ormRepository.save(delivery);

@@ -5,4 +5,5 @@ export default interface ICreateDeliveryDTO {
   neighborhood: string;
   city: string;
   state: string;
+  deliveryman_id?: string;
 }
