@@ -1,4 +1,4 @@
-import { getRepository, Repository, Raw } from 'typeorm';
+import { getRepository, Repository, Raw, IsNull } from 'typeorm';
 
 import ICreateDeliveryDTO from '@modules/deliveries/dtos/ICreateDeliveryDTO';
 import IFindAllInDayFromDeliverymanDTO from '@modules/deliveries/dtos/IFindAllInDayFromDeliverymanDTO';
@@ -41,6 +41,14 @@ export default class DeliveriesRepository implements IDeliveriesRepository {
     });
 
     return deliveries;
+  }
+
+  public async findAll(): Promise<Delivery[]> {
+    return this.ormRepository.find();
+  }
+
+  public async findAllWithoutDeliveryman(): Promise<Delivery[]> {
+    return this.ormRepository.find({ where: { deliveryman_id: IsNull() } });
   }
 
   public async findById(delivery_id: string): Promise<Delivery | undefined> {
