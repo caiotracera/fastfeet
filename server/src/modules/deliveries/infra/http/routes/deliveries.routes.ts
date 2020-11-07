@@ -39,3 +39,5 @@ router.patch(
 );
 
 router.delete('/:delivery_id', deliveriesController.delete);
+
+export default router;
