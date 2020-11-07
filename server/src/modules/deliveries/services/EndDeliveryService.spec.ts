@@ -44,6 +44,7 @@ describe('finishDelivery', () => {
     const endedDelivery = await endDeliveryService.execute({
       delivery_id: delivery.id,
       user_id: deliveryman.id,
+      signatureFilename: 'random_signature',
     });
 
     expect(endedDelivery).toHaveProperty('end_date');
@@ -62,6 +63,7 @@ describe('finishDelivery', () => {
       endDeliveryService.execute({
         delivery_id: 'non-existing-id',
         user_id: deliveryman.id,
+        signatureFilename: 'random_signature',
       }),
     ).rejects.toBeInstanceOf(AppError);
   });
@@ -91,12 +93,14 @@ describe('finishDelivery', () => {
     await endDeliveryService.execute({
       delivery_id: delivery.id,
       user_id: deliveryman.id,
+      signatureFilename: 'random_signature',
     });
 
     await expect(
       endDeliveryService.execute({
         delivery_id: delivery.id,
         user_id: deliveryman.id,
+        signatureFilename: 'random_signature',
       }),
     ).rejects.toBeInstanceOf(AppError);
   });
@@ -124,6 +128,7 @@ describe('finishDelivery', () => {
       endDeliveryService.execute({
         delivery_id: delivery.id,
         user_id: deliveryman.id,
+        signatureFilename: 'random_signature',
       }),
     ).rejects.toBeInstanceOf(AppError);
   });
@@ -145,6 +150,7 @@ describe('finishDelivery', () => {
       endDeliveryService.execute({
         delivery_id: delivery.id,
         user_id: 'non-existing-id',
+        signatureFilename: 'random_signature',
       }),
     ).rejects.toBeInstanceOf(AppError);
   });
@@ -175,6 +181,7 @@ describe('finishDelivery', () => {
       endDeliveryService.execute({
         delivery_id: delivery.id,
         user_id: deliveryman.id,
+        signatureFilename: 'random_signature',
       }),
     ).rejects.toBeInstanceOf(AppError);
   });
@@ -213,6 +220,7 @@ describe('finishDelivery', () => {
       endDeliveryService.execute({
         delivery_id: delivery.id,
         user_id: another_deliveryman.id,
+        signatureFilename: 'random_signature',
       }),
     ).rejects.toBeInstanceOf(AppError);
   });

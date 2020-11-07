@@ -8,6 +8,7 @@ import Delivery from '@modules/deliveries/infra/typeorm/entities/Delivery';
 interface IRequest {
   user_id: string;
   delivery_id: string;
+  signatureFilename: string;
 }
 
 @injectable()
@@ -20,7 +21,11 @@ export default class EndDeliveryService {
     private usersRepository: IUsersRepository,
   ) {}
 
-  public async execute({ user_id, delivery_id }: IRequest): Promise<Delivery> {
+  public async execute({
+    user_id,
+    delivery_id,
+    signatureFilename,
+  }: IRequest): Promise<Delivery> {
     const delivery = await this.deliveriesRepository.findById(delivery_id);
     if (!delivery) {
       throw new AppError('Delivery not found', 404);
@@ -50,6 +55,7 @@ export default class EndDeliveryService {
     }
 
     delivery.end_date = new Date();
+    delivery.signature_id = signatureFilename;
 
     await this.deliveriesRepository.save(delivery);
     return delivery;

@@ -45,7 +45,7 @@ export default class CreateDeliveries1604696100415
           },
           {
             name: 'signature_id',
-            type: 'uuid',
+            type: 'varchar',
             isNullable: true,
           },
           {

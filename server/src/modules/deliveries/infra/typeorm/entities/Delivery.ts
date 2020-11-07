@@ -2,7 +2,6 @@ import {
   Entity,
   Column,
   PrimaryGeneratedColumn,
-  Generated,
   CreateDateColumn,
   UpdateDateColumn,
   ManyToOne,
@@ -41,7 +40,7 @@ export default class Delivery {
   @Column()
   state: string;
 
-  @Generated('uuid')
+  @Column()
   signature_id: string;
 
   @Column()
