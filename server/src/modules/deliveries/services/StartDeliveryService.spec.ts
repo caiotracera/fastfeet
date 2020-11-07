@@ -174,4 +174,106 @@ describe('StartDelivery', () => {
       }),
     ).rejects.toBeInstanceOf(AppError);
   });
+
+  it('should not be able to start a delivery if deliveryman is not the same', async () => {
+    const deliveryman = await fakeUsersRepository.create({
+      name: 'John Doe',
+      email: 'johndoe@example.com',
+      password: '123456',
+      cpf: '99999999999',
+      deliveryman: true,
+    });
+
+    const delivery = await fakeDeliveriesRepository.create({
+      address: 'Another random address',
+      city: 'Random city',
+      neighborhood: 'Random neighborhood',
+      state: 'Random State',
+      postal_code: '99999999',
+      product: 'Random product',
+      deliveryman_id: deliveryman.id,
+    });
+
+    await startDeliveryService.execute({
+      delivery_id: delivery.id,
+      user_id: deliveryman.id,
+    });
+
+    const delivery2 = await fakeDeliveriesRepository.create({
+      address: 'Another random address',
+      city: 'Random city',
+      neighborhood: 'Random neighborhood',
+      state: 'Random State',
+      postal_code: '99999999',
+      product: 'Random product',
+      deliveryman_id: deliveryman.id,
+    });
+
+    await startDeliveryService.execute({
+      delivery_id: delivery2.id,
+      user_id: deliveryman.id,
+    });
+
+    const delivery3 = await fakeDeliveriesRepository.create({
+      address: 'Another random address',
+      city: 'Random city',
+      neighborhood: 'Random neighborhood',
+      state: 'Random State',
+      postal_code: '99999999',
+      product: 'Random product',
+      deliveryman_id: deliveryman.id,
+    });
+
+    await startDeliveryService.execute({
+      delivery_id: delivery3.id,
+      user_id: deliveryman.id,
+    });
+
+    const delivery4 = await fakeDeliveriesRepository.create({
+      address: 'Another random address',
+      city: 'Random city',
+      neighborhood: 'Random neighborhood',
+      state: 'Random State',
+      postal_code: '99999999',
+      product: 'Random product',
+      deliveryman_id: deliveryman.id,
+    });
+
+    await startDeliveryService.execute({
+      delivery_id: delivery4.id,
+      user_id: deliveryman.id,
+    });
+
+    const delivery5 = await fakeDeliveriesRepository.create({
+      address: 'Another random address',
+      city: 'Random city',
+      neighborhood: 'Random neighborhood',
+      state: 'Random State',
+      postal_code: '99999999',
+      product: 'Random product',
+      deliveryman_id: deliveryman.id,
+    });
+
+    await startDeliveryService.execute({
+      delivery_id: delivery5.id,
+      user_id: deliveryman.id,
+    });
+
+    const delivery6 = await fakeDeliveriesRepository.create({
+      address: 'Another random address',
+      city: 'Random city',
+      neighborhood: 'Random neighborhood',
+      state: 'Random State',
+      postal_code: '99999999',
+      product: 'Random product',
+      deliveryman_id: deliveryman.id,
+    });
+
+    await expect(
+      startDeliveryService.execute({
+        delivery_id: delivery6.id,
+        user_id: deliveryman.id,
+      }),
+    ).rejects.toBeInstanceOf(AppError);
+  });
 });

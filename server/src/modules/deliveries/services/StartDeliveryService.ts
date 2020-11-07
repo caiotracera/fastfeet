@@ -1,4 +1,5 @@
 import { inject, injectable } from 'tsyringe';
+import { getDate, getMonth, getYear } from 'date-fns';
 
 import AppError from '@shared/errors/AppError';
 import IUsersRepository from '@modules/users/repositories/IUsersRepository';
@@ -43,6 +44,19 @@ export default class StartDeliveryService {
       throw new AppError(
         'You cannot start deliveries from another deliveryman',
       );
+    }
+
+    const deliveriesFromToday = await this.deliveriesRepository.findAllInDayFromDeliveryman(
+      {
+        deliveryman_id: user.id,
+        day: getDate(new Date()),
+        month: getMonth(new Date()),
+        year: getYear(new Date()),
+      },
+    );
+
+    if (deliveriesFromToday.length >= 5) {
+      throw new AppError('You can only start 5 deliveries each day');
     }
 
     delivery.deliveryman_id = user.id;
