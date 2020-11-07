@@ -80,7 +80,6 @@ export default class DeliveriesRepository implements IDeliveriesRepository {
       order: {
         start_date: 'ASC',
       },
-      relations: ['users'],
     });
 
     return deliveries;
