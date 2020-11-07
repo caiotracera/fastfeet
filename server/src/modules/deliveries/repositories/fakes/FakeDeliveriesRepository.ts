@@ -46,7 +46,10 @@ export default class FakeDeliveriesRepository implements IDeliveriesRepository {
 
   public async findByDeliveryman(deliveryman_id: string): Promise<Delivery[]> {
     const deliveries = this.deliveries.filter(
-      delivery => delivery.deliveryman_id === deliveryman_id,
+      delivery =>
+        delivery.deliveryman_id === deliveryman_id &&
+        delivery.end_date === undefined &&
+        delivery.canceled_at === undefined,
     );
 
     return deliveries;
