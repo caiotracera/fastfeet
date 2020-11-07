@@ -5,8 +5,9 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   ManyToOne,
+  JoinColumn,
 } from 'typeorm';
-import { Expose, Exclude } from 'class-transformer';
+import { Expose } from 'class-transformer';
 
 import User from '@modules/users/infra/typeorm/entities/User';
 
@@ -18,8 +19,8 @@ export default class Delivery {
   @Column()
   deliveryman_id: string;
 
-  @Exclude()
-  @ManyToOne(() => User, user => user.id)
+  @ManyToOne(() => User, user => user.delivery, { eager: true })
+  @JoinColumn({ name: 'deliveryman_id' })
   deliveryman: User;
 
   @Column()

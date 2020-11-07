@@ -46,8 +46,8 @@ export default class User {
   @DeleteDateColumn()
   deleted_at: Date;
 
-  @OneToMany(() => Delivery, delivery => delivery.deliveryman_id)
-  deliveries: string[];
+  @OneToMany(() => Delivery, delivery => delivery.deliveryman)
+  delivery: Delivery;
 
   @Expose({ name: 'avatar_url' })
   getAvatarUrl(): string | null {
