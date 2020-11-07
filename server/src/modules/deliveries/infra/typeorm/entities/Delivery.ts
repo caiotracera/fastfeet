@@ -7,7 +7,7 @@ import {
   UpdateDateColumn,
   ManyToOne,
 } from 'typeorm';
-import { Expose } from 'class-transformer';
+import { Expose, Exclude } from 'class-transformer';
 
 import User from '@modules/users/infra/typeorm/entities/User';
 
@@ -19,6 +19,7 @@ export default class Delivery {
   @Column()
   deliveryman_id: string;
 
+  @Exclude()
   @ManyToOne(() => User, user => user.id)
   deliveryman: User;
 
