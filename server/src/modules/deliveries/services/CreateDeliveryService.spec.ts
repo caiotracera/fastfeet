@@ -35,7 +35,7 @@ describe('CreateDelivery', () => {
 
     const deliveryman = await fakeUsersRepository.create({
       name: 'John Tre',
-      email: 'johndoe@example.com',
+      email: 'johntre@example.com',
       password: '147852369',
       cpf: '11111111111',
       deliveryman: true,
