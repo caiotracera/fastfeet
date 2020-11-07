@@ -16,8 +16,11 @@ export default class Delivery {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @ManyToOne(() => User, user => user.id)
+  @Column()
   deliveryman_id: string;
+
+  @ManyToOne(() => User, user => user.id)
+  deliveryman: User;
 
   @Column()
   product: string;
