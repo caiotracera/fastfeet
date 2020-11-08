@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "main": "./build/src/shared/infra/http/index.js",
   "license": "MIT",
+  "private": "true",
   "scripts": {
     "build": "rimraf ./build && tsc",
     "dev:server": "ts-node-dev -r tsconfig-paths/register --inspect --watch --transpile-only --ignore-watch node_modules src/shared/infra/http/server.ts",

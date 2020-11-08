@@ -91,7 +91,7 @@ const Input: React.ForwardRefRenderFunction<InputRef, InputProps> = (
       {showPasswordIcon && (
         <TouchableOpacity onPress={handleShowPassword}>
           <RightIcon
-            name={showPassword ? 'eye-off' : 'eye'}
+            name={showPassword ? 'eye' : 'eye-off'}
             size={20}
             color="#4C33CC"
           />
