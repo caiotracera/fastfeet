@@ -86,10 +86,13 @@ const SignIn: React.FC = () => {
               <CheckBox
                 disabled={false}
                 value={toggleCheckBox}
-                onValueChange={(newValue) => setToggleCheckBox(newValue)}
                 tintColors={{ true: '#ffc042', false: '#ffc042' }}
               />
-              <LoginOptionsText>Lembrar-me</LoginOptionsText>
+              <TouchableOpacity
+                onPress={() => setToggleCheckBox(!toggleCheckBox)}
+              >
+                <LoginOptionsText>Lembrar-me</LoginOptionsText>
+              </TouchableOpacity>
             </CheckboxLogin>
             <TouchableOpacity>
               <LoginOptionsText>Esqueci minha senha</LoginOptionsText>
