@@ -1,8 +1,9 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { Image, TextInput, TouchableOpacity } from 'react-native';
 import CheckBox from '@react-native-community/checkbox';
 import { FormHandles } from '@unform/core';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { useNavigation } from '@react-navigation/native';
 
 import logoImg from '../../assets/images/logo.png';
 import logotipoImg from '../../assets/images/logotipo.png';
@@ -31,7 +32,13 @@ const SignIn: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
   const passwordInputRef = useRef<TextInput>(null);
 
+  const navigation = useNavigation();
+
   const [toggleCheckBox, setToggleCheckBox] = useState(false);
+
+  const handleClickForgotPassword = useCallback(() => {
+    navigation.navigate('ForgotPassword');
+  }, [navigation]);
 
   return (
     <ScrollView
@@ -94,7 +101,7 @@ const SignIn: React.FC = () => {
                 <LoginOptionsText>Lembrar-me</LoginOptionsText>
               </TouchableOpacity>
             </CheckboxLogin>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={handleClickForgotPassword}>
               <LoginOptionsText>Esqueci minha senha</LoginOptionsText>
             </TouchableOpacity>
           </LoginOptions>

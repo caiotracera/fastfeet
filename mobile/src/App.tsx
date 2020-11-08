@@ -1,10 +1,26 @@
+import 'react-native-gesture-handler';
 import React from 'react';
-import { Text, View } from 'react-native';
+import { StatusBar, View } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
 
-import SignIn from './pages/SignIn';
+import AppProvider from './hooks';
+import Routes from './routes';
 
 const App: React.FC = () => {
-  return <SignIn />;
+  return (
+    <NavigationContainer>
+      <AppProvider>
+        <View style={{ flex: 1, backgroundColor: '#ffc042' }}>
+          <StatusBar
+            networkActivityIndicatorVisible
+            backgroundColor="#4c33cc"
+          />
+
+          <Routes />
+        </View>
+      </AppProvider>
+    </NavigationContainer>
+  );
 };
 
 export default App;
