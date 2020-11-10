@@ -2,7 +2,7 @@ import React from 'react';
 import { ActivityIndicator, View, StatusBar } from 'react-native';
 
 import AuthRoutes from './auth.routes';
-// import AppRoutes from './app.routes';
+import AppRoutes from './app.routes';
 
 import { useAuth } from '../hooks/auth';
 
@@ -17,7 +17,7 @@ const Routes: React.FC = () => {
     );
   }
 
-  return <AuthRoutes />;
+  return <AppRoutes />;
 };
 
 export default Routes;

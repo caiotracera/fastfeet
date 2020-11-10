@@ -44,5 +44,5 @@ export const LeftIcon = styled(FeatherIcon)`
 `;
 
 export const RightIcon = styled(FeatherIcon)`
-  margin-right: 16px;
+  padding-right: 20px;
 `;

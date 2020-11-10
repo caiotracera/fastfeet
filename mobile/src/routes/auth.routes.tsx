@@ -13,7 +13,7 @@ const AuthRoutes: React.FC = () => (
   <Auth.Navigator
     screenOptions={{
       headerShown: false,
-      cardStyle: { backgroundColor: '#312e38' },
+      cardStyle: { backgroundColor: '#4c33cc' },
       ...TransitionPresets.SlideFromRightIOS,
     }}
   >
