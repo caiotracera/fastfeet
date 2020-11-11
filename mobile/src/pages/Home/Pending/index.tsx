@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Image, Text, View, Keyboard } from 'react-native';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import StepIndicator from 'react-native-step-indicator';
+import { useNavigation } from '@react-navigation/native';
 
 import Navbar from '../../../components/Navbar';
 import HorizontalRow from '../../../components/HorizontalRow';
@@ -34,6 +35,8 @@ import {
 const Pending: React.FC = () => {
   const [showNavbar, setShowNavibar] = useState(true);
 
+  const navigation = useNavigation();
+
   useEffect(() => {
     const keyboardShownListener = Keyboard.addListener(
       'keyboardDidShow',
@@ -51,6 +54,10 @@ const Pending: React.FC = () => {
       keyboardHideListener.remove();
     };
   }, []);
+
+  const handleGoToDetails = useCallback(() => {
+    navigation.navigate('DeliveryDetails');
+  }, [navigation]);
 
   const labels = ['Aguardando', 'Retirado', 'Entregue'];
   return (
@@ -135,7 +142,7 @@ const Pending: React.FC = () => {
                 }}
               />
             </StepContainer>
-            <DeliveryFooter>
+            <DeliveryFooter onPress={handleGoToDetails}>
               <DeliveryFooterText>Detalhes</DeliveryFooterText>
               <FeatherIcon name="chevron-right" size={20} color="#6f6c80" />
             </DeliveryFooter>
