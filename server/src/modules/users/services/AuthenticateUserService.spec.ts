@@ -28,7 +28,7 @@ describe('AuthenticateUser', () => {
     });
 
     const response = await authenticateUserService.execute({
-      email: user.email,
+      cpf: user.cpf,
       password: user.password,
     });
 
@@ -39,7 +39,7 @@ describe('AuthenticateUser', () => {
   it('should not be able to authenticate a non-existing user', async () => {
     await expect(
       authenticateUserService.execute({
-        email: 'random-email@example.com',
+        cpf: 'random-cpf',
         password: 'random-password',
       }),
     ).rejects.toBeInstanceOf(AppError);
@@ -55,7 +55,7 @@ describe('AuthenticateUser', () => {
 
     await expect(
       authenticateUserService.execute({
-        email: user.email,
+        cpf: user.cpf,
         password: 'incorrect_password',
       }),
     ).rejects.toBeInstanceOf(AppError);

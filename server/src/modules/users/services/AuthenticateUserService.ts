@@ -9,7 +9,7 @@ import IHashProvider from '@modules/users/providers/HashProvider/models/IHashPro
 import User from '@modules/users/infra/typeorm/entities/User';
 
 interface IRequest {
-  email: string;
+  cpf: string;
   password: string;
 }
 
@@ -28,8 +28,8 @@ export default class AuthenticateUserService {
     private hashProvider: IHashProvider,
   ) {}
 
-  public async execute({ email, password }: IRequest): Promise<IResponse> {
-    const user = await this.usersRepository.findByEmail(email);
+  public async execute({ cpf, password }: IRequest): Promise<IResponse> {
+    const user = await this.usersRepository.findByCpf(cpf);
     if (!user) {
       throw new AppError('Incorrect e-mail/password combination', 401);
     }
