@@ -3,11 +3,15 @@ import { Image, Text, View, Keyboard } from 'react-native';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import StepIndicator from 'react-native-step-indicator';
 import { useNavigation } from '@react-navigation/native';
+import Geolocation from '@react-native-community/geolocation';
+import { MAPBOX_TOKEN } from '@env';
 
 import Navbar from '../../../components/Navbar';
 import HorizontalRow from '../../../components/HorizontalRow';
 
 import packageImage from '../../../assets/images/package.png';
+
+import api from '../../../services/api';
 
 import {
   Container,
@@ -32,8 +36,17 @@ import {
   DeliveryFooterText,
 } from './styles';
 
+interface LocationProps {
+  latitude: number;
+  longitude: number;
+}
+
 const Pending: React.FC = () => {
   const [showNavbar, setShowNavibar] = useState(true);
+  const [userPosition, setUserPosition] = useState<LocationProps>(
+    {} as LocationProps,
+  );
+  const [userLocation, setUserLocation] = useState();
 
   const navigation = useNavigation();
 
@@ -54,6 +67,25 @@ const Pending: React.FC = () => {
       keyboardHideListener.remove();
     };
   }, []);
+
+  useEffect(() => {
+    async function getUserPosition(): Promise<void> {
+      Geolocation.getCurrentPosition((position) => {
+        setUserPosition(position.coords);
+      });
+    }
+    async function getUserLocation(): Promise<void> {
+      if (MAPBOX_TOKEN) {
+        const response = await api.get(
+          `https://api.mapbox.com/geocoding/v5/mapbox.places/${userPosition.longitude},${userPosition.latitude}.json?access_token=${MAPBOX_TOKEN}&language=pt`,
+        );
+        setUserLocation(response.data.features[3].context[0].text_pt);
+      }
+    }
+
+    getUserPosition();
+    getUserLocation();
+  }, [userPosition.latitude, userPosition.longitude]);
 
   const handleGoToDetails = useCallback(() => {
     navigation.navigate('DeliveryDetails');
@@ -77,7 +109,7 @@ const Pending: React.FC = () => {
             <HeaderTitle>Entregas</HeaderTitle>
             <LocationContainer>
               <FeatherIcon name="map-pin" size={20} color="#ffc042" />
-              <LocationText>São Gonçalo</LocationText>
+              {userLocation && <LocationText>{userLocation}</LocationText>}
             </LocationContainer>
           </SubHeaderContainer>
 
