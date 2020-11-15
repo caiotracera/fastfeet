@@ -58,9 +58,6 @@ describe('ShowDeliveriesFromDeliveryman', () => {
       deliveryman_id: deliveryman.id,
     });
 
-    delivery3.canceled_at = new Date();
-    await fakeDeliveriesRepository.save(delivery3);
-
     const delivery4 = await fakeDeliveriesRepository.create({
       address: 'One more random address',
       city: 'One more random city',
@@ -71,14 +68,11 @@ describe('ShowDeliveriesFromDeliveryman', () => {
       deliveryman_id: deliveryman.id,
     });
 
-    delivery4.end_date = new Date();
-    await fakeDeliveriesRepository.save(delivery4);
-
     const deliveries = await showDeliveriesFromDeliverymanService.execute({
       deliveryman_id: deliveryman.id,
     });
 
-    expect(deliveries).toEqual([delivery1, delivery2]);
+    expect(deliveries).toEqual([delivery1, delivery2, delivery3, delivery4]);
   });
 
   it('should not be able to list the deliveries from a non-existing deliveryman', async () => {

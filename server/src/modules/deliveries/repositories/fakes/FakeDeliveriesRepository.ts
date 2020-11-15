@@ -48,7 +48,6 @@ export default class FakeDeliveriesRepository implements IDeliveriesRepository {
     const deliveries = this.deliveries.filter(
       delivery =>
         delivery.deliveryman_id === deliveryman_id &&
-        delivery.end_date === undefined &&
         delivery.canceled_at === undefined,
     );
 
