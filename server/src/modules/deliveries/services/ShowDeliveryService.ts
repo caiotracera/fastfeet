@@ -21,6 +21,18 @@ export default class ShowDeliveryService {
       throw new AppError('Delivery not found', 404);
     }
 
+    if (!delivery.start_date) {
+      delivery.status = 0;
+    }
+
+    if (delivery.start_date) {
+      delivery.status = 1;
+    }
+
+    if (delivery.end_date) {
+      delivery.status = 2;
+    }
+
     return delivery;
   }
 }
