@@ -4,14 +4,18 @@ import FeatherIcon from 'react-native-vector-icons/Feather';
 import StepIndicator from 'react-native-step-indicator';
 import { useNavigation } from '@react-navigation/native';
 import Geolocation from '@react-native-community/geolocation';
+import { format } from 'date-fns';
 import { MAPBOX_TOKEN } from '@env';
 
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import Navbar from '../../../components/Navbar';
 import HorizontalRow from '../../../components/HorizontalRow';
 
 import packageImage from '../../../assets/images/package.png';
 
 import api from '../../../services/api';
+
+import { useAuth } from '../../../hooks/auth';
 
 import {
   Container,
@@ -41,13 +45,22 @@ interface LocationProps {
   longitude: number;
 }
 
+interface DeliveryProps {
+  id: string;
+  product: string;
+  created_at: Date;
+  start_date: Date;
+  end_date: Date;
+  status: number;
+}
+
 const Pending: React.FC = () => {
   const [showNavbar, setShowNavibar] = useState(true);
-  const [userPosition, setUserPosition] = useState<LocationProps>(
-    {} as LocationProps,
-  );
+  const [userPosition, setUserPosition] = useState({} as LocationProps);
   const [userLocation, setUserLocation] = useState();
+  const [deliveries, setDeliveries] = useState<DeliveryProps[]>([]);
 
+  const { user, signOut } = useAuth();
   const navigation = useNavigation();
 
   useEffect(() => {
@@ -69,11 +82,6 @@ const Pending: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    async function getUserPosition(): Promise<void> {
-      Geolocation.getCurrentPosition((position) => {
-        setUserPosition(position.coords);
-      });
-    }
     async function getUserLocation(): Promise<void> {
       if (MAPBOX_TOKEN) {
         const response = await api.get(
@@ -83,13 +91,35 @@ const Pending: React.FC = () => {
       }
     }
 
-    getUserPosition();
+    Geolocation.getCurrentPosition((position) => {
+      setUserPosition(position.coords);
+    });
+
     getUserLocation();
   }, [userPosition.latitude, userPosition.longitude]);
+
+  useEffect(() => {
+    api.get('/deliveryman').then((response) => {
+      const allDeliveries = response.data as DeliveryProps[];
+
+      allDeliveries.forEach((delivery: DeliveryProps) => {
+        if (delivery.start_date) {
+          delivery.status = 1;
+        } else {
+          delivery.status = 0;
+        }
+      });
+
+      setDeliveries(allDeliveries);
+    });
+  }, [deliveries]);
 
   const handleGoToDetails = useCallback(() => {
     navigation.navigate('DeliveryDetails');
   }, [navigation]);
+  const formatDeliveryDate = useCallback((created_date) => {
+    return format(new Date(created_date), 'dd/MM/yyyy');
+  }, []);
 
   const labels = ['Aguardando', 'Retirado', 'Entregue'];
   return (
@@ -100,9 +130,11 @@ const Pending: React.FC = () => {
             <WelcomeUserText>
               Bem vindo,
               {'\n'}
-              Caio Tracera
+              {user.name}
             </WelcomeUserText>
-            <FeatherIcon name="log-out" size={20} color="#FFC042" />
+            <TouchableOpacity onPress={signOut}>
+              <FeatherIcon name="log-out" size={20} color="#FFC042" />
+            </TouchableOpacity>
           </WelcomeContainer>
 
           <SubHeaderContainer>
@@ -136,125 +168,54 @@ const Pending: React.FC = () => {
                 lineHeight: 18,
               }}
             >
-              8 entregas
+              {`${deliveries.length} entregas`}
             </Text>
           </HorizontalRow>
         </View>
 
         <DeliveryContainer>
-          <Delivery style={{ elevation: 5 }}>
-            <DeliveryHeader>
-              <DeliveryTitleContainer>
-                <Image source={packageImage} />
-                <DeliveryTitle>Pacote 01</DeliveryTitle>
-              </DeliveryTitleContainer>
-              <DeliveryDate>01/07/2020</DeliveryDate>
-            </DeliveryHeader>
-            <StepContainer>
-              <StepIndicator
-                stepCount={3}
-                currentPosition={1}
-                labels={labels}
-                customStyles={{
-                  stepIndicatorSize: 12,
-                  currentStepIndicatorSize: 12,
-                  stepStrokeCurrentColor: '#00DA6D',
-                  stepStrokeFinishedColor: '#00DA6D',
-                  stepStrokeUnFinishedColor: '#DAD7E0',
-                  separatorFinishedColor: '#00DA6D',
-                  separatorUnFinishedColor: '#DAD7E0',
-                  stepIndicatorFinishedColor: '#00DA6D',
-                  stepIndicatorUnFinishedColor: '#DAD7E0',
-                  stepIndicatorCurrentColor: '#00DA6D',
-                  stepIndicatorLabelCurrentColor: '#00DA6D',
-                  stepIndicatorLabelFinishedColor: '#00DA6D',
-                  stepIndicatorLabelUnFinishedColor: '#DAD7E0',
-                  currentStepLabelColor: '#00DA6D',
-                  labelColor: '#DAD7E0',
-                }}
-              />
-            </StepContainer>
-            <DeliveryFooter onPress={handleGoToDetails}>
-              <DeliveryFooterText>Detalhes</DeliveryFooterText>
-              <FeatherIcon name="chevron-right" size={20} color="#6f6c80" />
-            </DeliveryFooter>
-          </Delivery>
-
-          <Delivery style={{ elevation: 5 }}>
-            <DeliveryHeader>
-              <DeliveryTitleContainer>
-                <Image source={packageImage} />
-                <DeliveryTitle>Pacote 01</DeliveryTitle>
-              </DeliveryTitleContainer>
-              <DeliveryDate>01/07/2020</DeliveryDate>
-            </DeliveryHeader>
-            <StepContainer>
-              <StepIndicator
-                stepCount={3}
-                currentPosition={1}
-                labels={labels}
-                customStyles={{
-                  stepIndicatorSize: 12,
-                  currentStepIndicatorSize: 12,
-                  stepStrokeCurrentColor: '#00DA6D',
-                  stepStrokeFinishedColor: '#00DA6D',
-                  stepStrokeUnFinishedColor: '#DAD7E0',
-                  separatorFinishedColor: '#00DA6D',
-                  separatorUnFinishedColor: '#DAD7E0',
-                  stepIndicatorFinishedColor: '#00DA6D',
-                  stepIndicatorUnFinishedColor: '#DAD7E0',
-                  stepIndicatorCurrentColor: '#00DA6D',
-                  stepIndicatorLabelCurrentColor: '#00DA6D',
-                  stepIndicatorLabelFinishedColor: '#00DA6D',
-                  stepIndicatorLabelUnFinishedColor: '#DAD7E0',
-                  currentStepLabelColor: '#00DA6D',
-                  labelColor: '#DAD7E0',
-                }}
-              />
-            </StepContainer>
-            <DeliveryFooter>
-              <DeliveryFooterText>Detalhes</DeliveryFooterText>
-              <FeatherIcon name="chevron-right" size={20} color="#6f6c80" />
-            </DeliveryFooter>
-          </Delivery>
-
-          <Delivery style={{ elevation: 5 }}>
-            <DeliveryHeader>
-              <DeliveryTitleContainer>
-                <Image source={packageImage} />
-                <DeliveryTitle>Pacote 01</DeliveryTitle>
-              </DeliveryTitleContainer>
-              <DeliveryDate>01/07/2020</DeliveryDate>
-            </DeliveryHeader>
-            <StepContainer>
-              <StepIndicator
-                stepCount={3}
-                currentPosition={0}
-                labels={labels}
-                customStyles={{
-                  stepIndicatorSize: 12,
-                  currentStepIndicatorSize: 12,
-                  stepStrokeCurrentColor: '#00DA6D',
-                  stepStrokeFinishedColor: '#00DA6D',
-                  stepStrokeUnFinishedColor: '#DAD7E0',
-                  separatorFinishedColor: '#00DA6D',
-                  separatorUnFinishedColor: '#DAD7E0',
-                  stepIndicatorFinishedColor: '#00DA6D',
-                  stepIndicatorUnFinishedColor: '#DAD7E0',
-                  stepIndicatorCurrentColor: '#00DA6D',
-                  stepIndicatorLabelCurrentColor: '#00DA6D',
-                  stepIndicatorLabelFinishedColor: '#00DA6D',
-                  stepIndicatorLabelUnFinishedColor: '#DAD7E0',
-                  currentStepLabelColor: '#00DA6D',
-                  labelColor: '#DAD7E0',
-                }}
-              />
-            </StepContainer>
-            <DeliveryFooter>
-              <DeliveryFooterText>Detalhes</DeliveryFooterText>
-              <FeatherIcon name="chevron-right" size={20} color="#6f6c80" />
-            </DeliveryFooter>
-          </Delivery>
+          {deliveries &&
+            deliveries.map((delivery) => (
+              <Delivery key={delivery.id} style={{ elevation: 5 }}>
+                <DeliveryHeader>
+                  <DeliveryTitleContainer>
+                    <Image source={packageImage} />
+                    <DeliveryTitle>{delivery.product}</DeliveryTitle>
+                  </DeliveryTitleContainer>
+                  <DeliveryDate>
+                    {formatDeliveryDate(delivery.created_at)}
+                  </DeliveryDate>
+                </DeliveryHeader>
+                <StepContainer>
+                  <StepIndicator
+                    stepCount={3}
+                    currentPosition={delivery.status}
+                    labels={labels}
+                    customStyles={{
+                      stepIndicatorSize: 12,
+                      currentStepIndicatorSize: 12,
+                      stepStrokeCurrentColor: '#00DA6D',
+                      stepStrokeFinishedColor: '#00DA6D',
+                      stepStrokeUnFinishedColor: '#DAD7E0',
+                      separatorFinishedColor: '#00DA6D',
+                      separatorUnFinishedColor: '#DAD7E0',
+                      stepIndicatorFinishedColor: '#00DA6D',
+                      stepIndicatorUnFinishedColor: '#DAD7E0',
+                      stepIndicatorCurrentColor: '#00DA6D',
+                      stepIndicatorLabelCurrentColor: '#00DA6D',
+                      stepIndicatorLabelFinishedColor: '#00DA6D',
+                      stepIndicatorLabelUnFinishedColor: '#DAD7E0',
+                      currentStepLabelColor: '#00DA6D',
+                      labelColor: '#DAD7E0',
+                    }}
+                  />
+                </StepContainer>
+                <DeliveryFooter onPress={handleGoToDetails}>
+                  <DeliveryFooterText>Detalhes</DeliveryFooterText>
+                  <FeatherIcon name="chevron-right" size={20} color="#6f6c80" />
+                </DeliveryFooter>
+              </Delivery>
+            ))}
         </DeliveryContainer>
       </Container>
       {showNavbar && <Navbar pageName="Pending" />}

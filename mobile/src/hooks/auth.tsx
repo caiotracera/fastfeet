@@ -7,6 +7,7 @@ import React, {
 } from 'react';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { AxiosError } from 'axios';
 import api from '../services/api';
 
 interface User {
@@ -15,6 +16,7 @@ interface User {
   name: string;
   email: string;
   cpf: string;
+  remember: boolean;
 }
 
 interface AuthState {
@@ -25,6 +27,7 @@ interface AuthState {
 interface SignInCredentials {
   cpf: string;
   password: string;
+  remember: boolean;
 }
 
 interface AuthContextData {
@@ -59,18 +62,24 @@ export const AuthProvider: React.FC = ({ children }) => {
     loadStorageData();
   }, []);
 
-  const signIn = useCallback(async ({ cpf, password }) => {
-    const response = await api.post('sessions', { cpf, password });
-    const { token, user } = response.data;
+  const signIn = useCallback(async ({ cpf, password, remember }) => {
+    try {
+      const response = await api.post('sessions', { cpf, password });
+      const { token, user } = response.data;
 
-    await AsyncStorage.multiSet([
-      ['@FastFeet:token', token],
-      ['@FastFeet:user', JSON.stringify(user)],
-    ]);
+      Object.assign(user, { remember });
 
-    api.defaults.headers.authorization = `Bearer ${token}`;
+      await AsyncStorage.multiSet([
+        ['@FastFeet:token', token],
+        ['@FastFeet:user', JSON.stringify(user)],
+      ]);
 
-    setData({ token, user });
+      api.defaults.headers.authorization = `Bearer ${token}`;
+
+      setData({ token, user });
+    } catch (error) {
+      throw new Error(error.response.data.message);
+    }
   }, []);
 
   const signOut = useCallback(async () => {

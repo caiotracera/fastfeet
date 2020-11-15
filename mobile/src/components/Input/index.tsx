@@ -79,7 +79,7 @@ const Input: React.ForwardRefRenderFunction<InputRef, InputProps> = (
         keyboardAppearance="dark"
         placeholderTextColor="#bebccc"
         onFocus={handleInputFocus}
-        secureTextEntry={!showPassword}
+        secureTextEntry={showPasswordIcon && !showPassword}
         onBlur={handleInputBlur}
         defaultValue={defaultValue}
         onChangeText={(value) => {

@@ -1,9 +1,10 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
-import { Image, TextInput, TouchableOpacity } from 'react-native';
+import { Alert, Image, TextInput, TouchableOpacity } from 'react-native';
 import CheckBox from '@react-native-community/checkbox';
 import { FormHandles } from '@unform/core';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useNavigation } from '@react-navigation/native';
+import * as Yup from 'yup';
 
 import logoImg from '../../assets/images/logo.png';
 import logotipoImg from '../../assets/images/logotipo.png';
@@ -11,6 +12,10 @@ import backgroundImg from '../../assets/images/backgroundImage.png';
 
 import Input from '../../components/Input';
 import Button from '../../components/Button';
+
+import getValidationErrors from '../../utils/getValidationErrors';
+
+import { useAuth } from '../../hooks/auth';
 
 import {
   Container,
@@ -27,10 +32,17 @@ import {
   ScrollView,
 } from './styles';
 
+interface SignInFormData {
+  cpf: string;
+  password: string;
+}
+
 const SignIn: React.FC = () => {
   const kavRef = useRef<KeyboardAwareScrollView>(null);
   const formRef = useRef<FormHandles>(null);
   const passwordInputRef = useRef<TextInput>(null);
+
+  const { signIn } = useAuth();
 
   const navigation = useNavigation();
 
@@ -39,6 +51,38 @@ const SignIn: React.FC = () => {
   const handleClickForgotPassword = useCallback(() => {
     navigation.navigate('ForgotPassword');
   }, [navigation]);
+
+  const handleFormSubmit = useCallback(
+    async (data: SignInFormData) => {
+      formRef.current?.setErrors({});
+
+      try {
+        formRef.current?.setErrors({});
+
+        const schema = Yup.object().shape({
+          cpf: Yup.string().required().min(11).max(11),
+          password: Yup.string().required(),
+        });
+
+        await schema.validate(data, { abortEarly: false });
+        await signIn({
+          cpf: data.cpf,
+          password: data.password,
+          remember: toggleCheckBox,
+        });
+      } catch (error) {
+        console.log(error.message);
+        if (error instanceof Yup.ValidationError) {
+          const errors = getValidationErrors(error);
+          formRef.current?.setErrors(errors);
+          return;
+        }
+
+        Alert.alert('Ooops!', error.message);
+      }
+    },
+    [signIn, toggleCheckBox],
+  );
 
   return (
     <ScrollView
@@ -64,7 +108,7 @@ const SignIn: React.FC = () => {
           <Description>Faça seu login para começar suas entregas.</Description>
         </WelcomeContainer>
 
-        <Form onSubmit={() => console.log('enviou')} ref={formRef}>
+        <Form ref={formRef} onSubmit={handleFormSubmit}>
           <Input
             autoCorrect={false}
             autoCapitalize="none"
