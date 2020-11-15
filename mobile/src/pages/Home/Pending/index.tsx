@@ -82,20 +82,24 @@ const Pending: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    async function getUserLocation(): Promise<void> {
-      if (MAPBOX_TOKEN) {
-        const response = await api.get(
+    Geolocation.getCurrentPosition(
+      (location) => {
+        setUserPosition(location.coords);
+      },
+      () => {},
+    );
+  }, []);
+
+  useEffect(() => {
+    if (userPosition.latitude) {
+      api
+        .get(
           `https://api.mapbox.com/geocoding/v5/mapbox.places/${userPosition.longitude},${userPosition.latitude}.json?access_token=${MAPBOX_TOKEN}&language=pt`,
-        );
-        setUserLocation(response.data.features[3].context[0].text_pt);
-      }
+        )
+        .then((response) => {
+          setUserLocation(response.data.features[3].context[0].text_pt);
+        });
     }
-
-    Geolocation.getCurrentPosition((position) => {
-      setUserPosition(position.coords);
-    });
-
-    getUserLocation();
   }, [userPosition.latitude, userPosition.longitude]);
 
   useEffect(() => {
