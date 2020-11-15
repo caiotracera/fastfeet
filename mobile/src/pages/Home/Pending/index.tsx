@@ -4,10 +4,10 @@ import FeatherIcon from 'react-native-vector-icons/Feather';
 import StepIndicator from 'react-native-step-indicator';
 import { useNavigation } from '@react-navigation/native';
 import Geolocation from '@react-native-community/geolocation';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import { format } from 'date-fns';
 import { MAPBOX_TOKEN } from '@env';
 
-import { TouchableOpacity } from 'react-native-gesture-handler';
 import Navbar from '../../../components/Navbar';
 import HorizontalRow from '../../../components/HorizontalRow';
 
@@ -101,14 +101,6 @@ const Pending: React.FC = () => {
   useEffect(() => {
     api.get('/deliveryman').then((response) => {
       const allDeliveries = response.data as DeliveryProps[];
-
-      allDeliveries.forEach((delivery: DeliveryProps) => {
-        if (delivery.start_date) {
-          delivery.status = 1;
-        } else {
-          delivery.status = 0;
-        }
-      });
 
       setDeliveries(allDeliveries);
     });

@@ -99,19 +99,21 @@ const Done: React.FC = () => {
   }, [userPosition.latitude, userPosition.longitude]);
 
   useEffect(() => {
-    api.get('/deliveryman?done=true').then((response) => {
-      const allDeliveries = response.data as DeliveryProps[];
+    let unmounted = false;
 
-      const finishedDeliveries: DeliveryProps[] = allDeliveries.filter(
-        (delivery: DeliveryProps) => delivery.end_date !== null,
-      );
+    async function getData(): Promise<void> {
+      const response = await api.get('/deliveryman?done=true');
+      const allDeliveries = response.data;
+      if (!unmounted) {
+        setDeliveries(allDeliveries);
+      }
+    }
 
-      finishedDeliveries.forEach((delivery: DeliveryProps) => {
-        delivery.status = 2;
-      });
+    getData();
 
-      setDeliveries(finishedDeliveries);
-    });
+    return () => {
+      unmounted = true;
+    };
   }, [deliveries]);
 
   const handleGoToDetails = useCallback(() => {
@@ -168,8 +170,7 @@ const Done: React.FC = () => {
                 lineHeight: 18,
               }}
             >
-              {deliveries.length}
-              entregas
+              {`${deliveries.length} entregas`}
             </Text>
           </HorizontalRow>
         </View>
