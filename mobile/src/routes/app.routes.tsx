@@ -4,7 +4,7 @@ import {
   TransitionPresets,
 } from '@react-navigation/stack';
 
-import Header from '../components/Header';
+import DeliveriesHeader from '../components/DeliveriesHeader';
 
 import Done from '../pages/Home/Done';
 import Pending from '../pages/Home/Pending';
@@ -21,8 +21,16 @@ const AppRoutes: React.FC = () => (
       animationEnabled: false,
     }}
   >
-    <App.Screen name="Pending" component={Pending} />
-    <App.Screen name="Done" component={Done} />
+    <App.Screen
+      name="Pending"
+      component={Pending}
+      options={{ headerShown: true, header: () => <DeliveriesHeader /> }}
+    />
+    <App.Screen
+      name="Done"
+      component={Done}
+      options={{ headerShown: true, header: () => <DeliveriesHeader /> }}
+    />
     <App.Screen
       name="DeliveryDetails"
       component={DeliveryDetails}

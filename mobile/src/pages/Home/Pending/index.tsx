@@ -3,10 +3,7 @@ import { Image, Text, View, Keyboard } from 'react-native';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import StepIndicator from 'react-native-step-indicator';
 import { useNavigation } from '@react-navigation/native';
-import Geolocation from '@react-native-community/geolocation';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 import { format } from 'date-fns';
-import { MAPBOX_TOKEN } from '@env';
 
 import Navbar from '../../../components/Navbar';
 import HorizontalRow from '../../../components/HorizontalRow';
@@ -15,20 +12,8 @@ import packageImage from '../../../assets/images/package.png';
 
 import api from '../../../services/api';
 
-import { useAuth } from '../../../hooks/auth';
-
 import {
   Container,
-  Header,
-  WelcomeContainer,
-  WelcomeUserText,
-  SubHeaderContainer,
-  HeaderTitle,
-  LocationContainer,
-  LocationText,
-  SearchContainer,
-  TextInput,
-  RightIcon,
   DeliveryContainer,
   Delivery,
   DeliveryHeader,
@@ -39,11 +24,6 @@ import {
   DeliveryFooter,
   DeliveryFooterText,
 } from './styles';
-
-interface LocationProps {
-  latitude: number;
-  longitude: number;
-}
 
 interface DeliveryProps {
   id: string;
@@ -56,11 +36,9 @@ interface DeliveryProps {
 
 const Pending: React.FC = () => {
   const [showNavbar, setShowNavibar] = useState(true);
-  const [userPosition, setUserPosition] = useState({} as LocationProps);
-  const [userLocation, setUserLocation] = useState();
+
   const [deliveries, setDeliveries] = useState<DeliveryProps[]>([]);
 
-  const { user, signOut } = useAuth();
   const navigation = useNavigation();
 
   useEffect(() => {
@@ -82,27 +60,6 @@ const Pending: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    Geolocation.getCurrentPosition(
-      (location) => {
-        setUserPosition(location.coords);
-      },
-      () => {},
-    );
-  }, []);
-
-  useEffect(() => {
-    if (userPosition.latitude) {
-      api
-        .get(
-          `https://api.mapbox.com/geocoding/v5/mapbox.places/${userPosition.longitude},${userPosition.latitude}.json?access_token=${MAPBOX_TOKEN}&language=pt`,
-        )
-        .then((response) => {
-          setUserLocation(response.data.features[3].context[0].text_pt);
-        });
-    }
-  }, [userPosition.latitude, userPosition.longitude]);
-
-  useEffect(() => {
     api.get('/deliveryman').then((response) => {
       const allDeliveries = response.data as DeliveryProps[];
 
@@ -121,38 +78,6 @@ const Pending: React.FC = () => {
   return (
     <>
       <Container keyboardShouldPersistTaps="always">
-        <Header>
-          <WelcomeContainer>
-            <WelcomeUserText>
-              Bem vindo,
-              {'\n'}
-              {user.name}
-            </WelcomeUserText>
-            <TouchableOpacity onPress={signOut}>
-              <FeatherIcon name="log-out" size={20} color="#FFC042" />
-            </TouchableOpacity>
-          </WelcomeContainer>
-
-          <SubHeaderContainer>
-            <HeaderTitle>Entregas</HeaderTitle>
-            <LocationContainer>
-              <FeatherIcon name="map-pin" size={20} color="#ffc042" />
-              {userLocation && <LocationText>{userLocation}</LocationText>}
-            </LocationContainer>
-          </SubHeaderContainer>
-
-          <SearchContainer style={{ elevation: 5 }}>
-            <TextInput
-              keyboardAppearance="default"
-              placeholder="Filtrar por bairro"
-              autoCorrect={false}
-              autoCapitalize="none"
-              returnKeyType="done"
-            />
-            <RightIcon name="search" size={20} color="#ffc042" />
-          </SearchContainer>
-        </Header>
-
         <View>
           <HorizontalRow>
             <Text
