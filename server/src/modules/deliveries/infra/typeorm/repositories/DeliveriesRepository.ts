@@ -41,7 +41,7 @@ export default class DeliveriesRepository implements IDeliveriesRepository {
 
   public async findByDeliveryman(deliveryman_id: string): Promise<Delivery[]> {
     const deliveries = await this.ormRepository.find({
-      where: { deliveryman_id, canceled_at: IsNull(), end_date: IsNull() },
+      where: { deliveryman_id, canceled_at: IsNull() },
     });
 
     return deliveries;
