@@ -59,6 +59,8 @@ export default class Delivery {
   @Column()
   canceled_at: Date;
 
+  status: number;
+
   @Expose({ name: 'signature_url' })
   getSignatureUrl(): string | null {
     if (!this.signature_id) {

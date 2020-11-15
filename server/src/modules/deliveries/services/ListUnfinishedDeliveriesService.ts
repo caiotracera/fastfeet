@@ -33,9 +33,17 @@ export default class ListUnfinishedDeliveriesService {
       deliveryman_id,
     );
 
-    const unfinishedDeliveries = deliveries.filter(
-      delivery => !delivery.end_date,
-    );
+    const unfinishedDeliveries = deliveries
+      .filter(delivery => !delivery.end_date)
+      .map((delivery: Delivery) => {
+        if (delivery.start_date) {
+          delivery.status = 1;
+        } else {
+          delivery.status = 0;
+        }
+
+        return delivery;
+      });
 
     return unfinishedDeliveries;
   }

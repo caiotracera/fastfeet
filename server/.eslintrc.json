@@ -21,6 +21,7 @@
   },
   "plugins": ["@typescript-eslint", "prettier"],
   "rules": {
+    "no-param-reassign": "off",
     "camelcase": "off",
     "prettier/prettier": "error",
     "@typescript-eslint/camelcase": "off",
