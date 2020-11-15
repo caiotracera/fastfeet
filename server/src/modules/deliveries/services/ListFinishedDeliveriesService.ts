@@ -33,11 +33,7 @@ export default class ListUnfinishedDeliveriesService {
       deliveryman_id,
     );
 
-    console.log(deliveries);
-
-    const finished = deliveries.filter(
-      delivery => delivery.end_date !== undefined,
-    );
+    const finished = deliveries.filter(delivery => delivery.end_date !== null);
 
     return finished;
   }
