@@ -41,7 +41,10 @@ const ForgotPassword: React.FC = () => {
 
       <WelcomeContainer>
         <Title>
-          <Highlighted>Esqueceu, </Highlighted>
+          <Highlighted>
+            Esqueceu
+            {'\n'}
+          </Highlighted>
           sua senha?
         </Title>
 

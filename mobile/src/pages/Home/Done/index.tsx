@@ -77,9 +77,13 @@ const Done: React.FC = () => {
     };
   }, [deliveries]);
 
-  const handleGoToDetails = useCallback(() => {
-    navigation.navigate('DeliveryDetails');
-  }, [navigation]);
+  const handleGoToDetails = useCallback(
+    (delivery_id: string) => {
+      navigation.navigate('DeliveryDetails', { delivery_id });
+    },
+    [navigation],
+  );
+
   const formatDeliveryDate = useCallback((created_date) => {
     return format(new Date(created_date), 'dd/MM/yyyy');
   }, []);
@@ -141,7 +145,7 @@ const Done: React.FC = () => {
                     }}
                   />
                 </StepContainer>
-                <DeliveryFooter onPress={handleGoToDetails}>
+                <DeliveryFooter onPress={() => handleGoToDetails(delivery.id)}>
                   <DeliveryFooterText>Detalhes</DeliveryFooterText>
                   <FeatherIcon name="chevron-right" size={20} color="#6f6c80" />
                 </DeliveryFooter>

@@ -60,16 +60,29 @@ const Pending: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    api.get('/deliveryman').then((response) => {
-      const allDeliveries = response.data as DeliveryProps[];
+    let unmounted = false;
 
-      setDeliveries(allDeliveries);
-    });
+    async function getData(): Promise<void> {
+      const response = await api.get('/deliveryman');
+      const allDeliveries = response.data;
+      if (!unmounted) {
+        setDeliveries(allDeliveries);
+      }
+    }
+
+    getData();
+
+    return () => {
+      unmounted = true;
+    };
   }, [deliveries]);
 
-  const handleGoToDetails = useCallback(() => {
-    navigation.navigate('DeliveryDetails');
-  }, [navigation]);
+  const handleGoToDetails = useCallback(
+    (delivery_id: string) => {
+      navigation.navigate('DeliveryDetails', { delivery_id });
+    },
+    [navigation],
+  );
   const formatDeliveryDate = useCallback((created_date) => {
     return format(new Date(created_date), 'dd/MM/yyyy');
   }, []);
@@ -131,7 +144,7 @@ const Pending: React.FC = () => {
                     }}
                   />
                 </StepContainer>
-                <DeliveryFooter onPress={handleGoToDetails}>
+                <DeliveryFooter onPress={() => handleGoToDetails(delivery.id)}>
                   <DeliveryFooterText>Detalhes</DeliveryFooterText>
                   <FeatherIcon name="chevron-right" size={20} color="#6f6c80" />
                 </DeliveryFooter>

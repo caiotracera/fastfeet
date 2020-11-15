@@ -1,6 +1,5 @@
 import React, { useCallback } from 'react';
 import { BorderlessButton } from 'react-native-gesture-handler';
-import FeatherIcons from 'react-native-vector-icons/Feather';
 import { useNavigation } from '@react-navigation/native';
 import { View, Image } from 'react-native';
 
@@ -10,18 +9,13 @@ import { Container, Title } from './styles';
 
 interface HeaderProps {
   title: string;
-  hasCloseAll?: boolean;
 }
 
-const Header: React.FC<HeaderProps> = ({ title, hasCloseAll = false }) => {
+const Header: React.FC<HeaderProps> = ({ title }) => {
   const navigation = useNavigation();
 
   const handleGoBack = useCallback(() => {
-    hasCloseAll ? navigation.goBack() : navigation.navigate('OrphanagesMap');
-  }, [hasCloseAll, navigation]);
-
-  const handleCloseAll = useCallback(() => {
-    navigation.navigate('OrphanagesMap');
+    navigation.goBack();
   }, [navigation]);
 
   return (
@@ -32,13 +26,7 @@ const Header: React.FC<HeaderProps> = ({ title, hasCloseAll = false }) => {
 
       <Title>{title}</Title>
 
-      {hasCloseAll ? (
-        <BorderlessButton onPress={handleCloseAll}>
-          <FeatherIcons name="x" size={24} color="#ff669d" />
-        </BorderlessButton>
-      ) : (
-        <View />
-      )}
+      <View />
     </Container>
   );
 };

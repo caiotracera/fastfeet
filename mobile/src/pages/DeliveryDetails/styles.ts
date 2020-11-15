@@ -10,24 +10,9 @@ export const Container = styled.View`
   background-color: #f7f5fa;
 `;
 
-export const HeaderContainer = styled.View`
-  padding: 11px 24px;
-  height: 134px;
-  background-color: #4c33cc;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-`;
-
-export const HeaderTitle = styled.Text`
-  font-family: 'RobotoCondensed-Bold';
-  color: #fff;
-  font-size: 26px;
-`;
-
 export const DetailsContainer = styled.View`
   position: absolute;
-  top: -30px;
+  top: -25px;
 
   height: 268px;
   width: 100%;
@@ -58,7 +43,7 @@ export const SituationContainer = styled.View`
 
   background-color: #fff;
   border-radius: 4px;
-  margin-top: 254px;
+  margin-top: 265px;
 `;
 
 export const InfoContainer = styled.View`
