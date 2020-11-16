@@ -32,7 +32,7 @@ router.post(
   deliveriesController.create,
 );
 
-router.patch(
+router.put(
   '/:delivery_id',
   upload.single('signature'),
   deliveriesController.update,
