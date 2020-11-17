@@ -36,7 +36,6 @@ export default class GenerateRefreshTokenService {
   }: IRequest): Promise<IResponse> {
     if (grant_type === 'refresh_token') {
       const decoded = verify(refresh_token, authConfig.jwt.secret);
-      console.log(refresh_token, verify(refresh_token, authConfig.jwt.secret));
       const { sub } = decoded as ITokenPayload;
 
       const user = await this.usersRepository.findById(sub);
