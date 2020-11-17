@@ -12,3 +12,4 @@ tmp/uploads/*
 
 .env
 ormconfig.json
+src/modules/deliveries.old
