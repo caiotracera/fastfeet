@@ -73,7 +73,7 @@ export default class DeliveriesController {
       });
     }
 
-    if (delivery.start_date && !delivery.end_date) {
+    if (delivery.start_date && !delivery.end_date && request.file) {
       delivery = await endDeliveryService.execute({
         delivery_id,
         user_id: request.user.id,

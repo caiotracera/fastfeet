@@ -34,6 +34,7 @@ router.post(
 
 router.put(
   '/:delivery_id',
+  ensureAuthenticated,
   upload.single('signature'),
   deliveriesController.update,
 );
