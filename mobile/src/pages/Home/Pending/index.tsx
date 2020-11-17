@@ -63,7 +63,7 @@ const Pending: React.FC = () => {
     let unmounted = false;
 
     async function getData(): Promise<void> {
-      const response = await api.get('/deliveryman');
+      const response = await api.get('/deliveries');
       const allDeliveries = response.data;
       if (!unmounted) {
         setDeliveries(allDeliveries);

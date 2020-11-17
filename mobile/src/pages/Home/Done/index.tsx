@@ -24,7 +24,6 @@ import {
   DeliveryFooter,
   DeliveryFooterText,
 } from './styles';
-import { useAuth } from '../../../hooks/auth';
 
 interface DeliveryProps {
   id: string;
@@ -63,7 +62,7 @@ const Done: React.FC = () => {
     let unmounted = false;
 
     async function getData(): Promise<void> {
-      const response = await api.get('/deliveryman?done=true');
+      const response = await api.get('/deliveries/done');
       const allDeliveries = response.data;
       if (!unmounted) {
         setDeliveries(allDeliveries);
