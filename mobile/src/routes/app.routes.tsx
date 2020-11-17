@@ -43,7 +43,7 @@ const AppRoutes: React.FC = () => (
       name="DeliveryConfirmation"
       component={DeliveryConfirmation}
       options={{
-        ...TransitionPresets.SlideFromRightIOS,
+        ...TransitionPresets.ModalPresentationIOS,
         animationEnabled: true,
       }}
     />

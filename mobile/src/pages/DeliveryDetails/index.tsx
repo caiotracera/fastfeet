@@ -1,11 +1,14 @@
 import React, { useCallback, useEffect, useState } from 'react';
+import { View, Image } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import FeatherIcons from 'react-native-vector-icons/Feather';
 import { format } from 'date-fns';
-
-import Header from '../../components/Header';
+import Modal from 'react-native-modal';
 
 import api from '../../services/api';
+
+import Header from '../../components/Header';
+import doneImage from '../../assets/images/feito.png';
 
 import {
   Container,
@@ -20,6 +23,9 @@ import {
   FinishDeliveryContainer,
   FinishDeliveryButton,
   FinishDeliveryButtonText,
+  ModalContainer,
+  ModalTitle,
+  ModalText,
 } from './styles';
 
 interface DeliveryDetailsRouteParams {
@@ -41,19 +47,33 @@ interface IDelivery {
 
 const DeliveryDetails: React.FC = () => {
   const [delivery, setDelivery] = useState<IDelivery>();
+  const [modalVisible, setModalVisible] = useState(false);
 
   const navigation = useNavigation();
   const route = useRoute();
 
   const { delivery_id } = route.params as DeliveryDetailsRouteParams;
 
-  const handleGoBack = useCallback(() => {
-    navigation.goBack();
-  }, [navigation]);
-
   const handleGoToConfirmation = useCallback(() => {
-    navigation.navigate('DeliveryConfirmation');
-  }, [navigation]);
+    navigation.navigate('DeliveryConfirmation', { delivery_id });
+  }, [delivery_id, navigation]);
+
+  const handleStartDelivery = useCallback(async () => {
+    const response = await api.put(`deliveries/${delivery_id}`);
+    setModalVisible(true);
+    setDelivery(response.data);
+
+    setTimeout(() => {
+      setModalVisible(false);
+      navigation.navigate('DeliveryDetails', { delivery_id });
+    }, 2000);
+  }, [delivery_id, navigation]);
+
+  navigation.addListener('focus', () => {
+    api.get(`deliveries/${delivery_id}`).then((response) => {
+      setDelivery(response.data);
+    });
+  });
 
   useEffect(() => {
     api.get(`deliveries/${delivery_id}`).then((response) => {
@@ -129,15 +149,47 @@ const DeliveryDetails: React.FC = () => {
             </SituationContainer>
           </Container>
 
-          <FinishDeliveryContainer>
-            <FinishDeliveryButton onPress={handleGoToConfirmation}>
-              <FinishDeliveryButtonText>
-                Confirmar entrega
-              </FinishDeliveryButtonText>
-            </FinishDeliveryButton>
-          </FinishDeliveryContainer>
+          {!delivery.start_date && (
+            <FinishDeliveryContainer>
+              <FinishDeliveryButton onPress={handleStartDelivery}>
+                <FinishDeliveryButtonText>
+                  Iniciar entrega
+                </FinishDeliveryButtonText>
+              </FinishDeliveryButton>
+            </FinishDeliveryContainer>
+          )}
+
+          {delivery.start_date && !delivery.end_date && (
+            <FinishDeliveryContainer>
+              <FinishDeliveryButton onPress={handleGoToConfirmation}>
+                <FinishDeliveryButtonText>
+                  Confirmar entrega
+                </FinishDeliveryButtonText>
+              </FinishDeliveryButton>
+            </FinishDeliveryContainer>
+          )}
+
+          {delivery.end_date && (
+            <FinishDeliveryContainer>
+              <FinishDeliveryButton disabled onPress={() => {}}>
+                <FinishDeliveryButtonText>
+                  Pacote entregue
+                </FinishDeliveryButtonText>
+              </FinishDeliveryButton>
+            </FinishDeliveryContainer>
+          )}
         </>
       )}
+
+      <View>
+        <Modal isVisible={modalVisible}>
+          <ModalContainer>
+            <Image source={doneImage} />
+            <ModalTitle>Pacote retirado.</ModalTitle>
+            <ModalText>Só falta entregar :)</ModalText>
+          </ModalContainer>
+        </Modal>
+      </View>
     </>
   );
 };

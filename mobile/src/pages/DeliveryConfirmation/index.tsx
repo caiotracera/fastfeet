@@ -1,11 +1,16 @@
 import React, { useCallback, useState } from 'react';
 import { View, Image, Alert } from 'react-native';
 import { BorderlessButton } from 'react-native-gesture-handler';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import FeatherIcons from 'react-native-vector-icons/Feather';
 import ImagePicker from 'react-native-image-picker';
+import Modal from 'react-native-modal';
+
+import api from '../../services/api';
+import { useAuth } from '../../hooks/auth';
 
 import leftArrowImg from '../../assets/images/leftarrow.png';
+import doneImage from '../../assets/images/feito.png';
 
 import {
   Container,
@@ -19,7 +24,14 @@ import {
   FinishDeliveryContainer,
   FinishDeliveryButton,
   FinishDeliveryButtonText,
+  ModalContainer,
+  ModalTitle,
+  ModalText,
 } from './styles';
+
+interface DeliveryDetailsRouteParams {
+  delivery_id: string;
+}
 
 interface ImageProps {
   uri: string;
@@ -27,11 +39,16 @@ interface ImageProps {
 
 const DeliveryDetails: React.FC = () => {
   const [confirmationImage, setConfirmationImage] = useState<ImageProps>();
+  const [modalVisible, setModalVisible] = useState(false);
 
+  const { user } = useAuth();
   const navigation = useNavigation();
+  const route = useRoute();
+
+  const { delivery_id } = route.params as DeliveryDetailsRouteParams;
 
   const handleGoBack = useCallback(() => {
-    navigation.goBack();
+    navigation.navigate('DeliveryDetails');
   }, [navigation]);
 
   const handleAddImage = useCallback(() => {
@@ -57,6 +74,23 @@ const DeliveryDetails: React.FC = () => {
       },
     );
   }, []);
+
+  const handleSendPhoto = useCallback(async () => {
+    const data = new FormData();
+    data.append('signature', {
+      type: 'image/jpeg',
+      name: `${user.id}.jpg`,
+      uri: confirmationImage?.uri,
+    });
+
+    await api.put(`deliveries/${delivery_id}`, data);
+    setModalVisible(true);
+
+    setTimeout(() => {
+      setModalVisible(false);
+      navigation.goBack();
+    }, 2000);
+  }, [confirmationImage?.uri, delivery_id, navigation, user.id]);
   return (
     <>
       <HeaderContainer>
@@ -104,11 +138,21 @@ const DeliveryDetails: React.FC = () => {
 
       {confirmationImage?.uri && (
         <FinishDeliveryContainer>
-          <FinishDeliveryButton onPress={() => {}}>
+          <FinishDeliveryButton onPress={handleSendPhoto}>
             <FinishDeliveryButtonText>Enviar foto</FinishDeliveryButtonText>
           </FinishDeliveryButton>
         </FinishDeliveryContainer>
       )}
+
+      <View>
+        <Modal isVisible={modalVisible}>
+          <ModalContainer>
+            <Image source={doneImage} />
+            <ModalTitle>Foto enviada!</ModalTitle>
+            <ModalText>Pacote entregue.</ModalText>
+          </ModalContainer>
+        </Modal>
+      </View>
     </>
   );
 };

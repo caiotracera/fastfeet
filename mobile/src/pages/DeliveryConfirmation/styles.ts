@@ -118,3 +118,28 @@ export const FinishDeliveryButtonText = styled.Text`
   line-height: 17.58px;
   font-family: 'Inter-Bold';
 `;
+
+export const ModalContainer = styled.View`
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+`;
+
+export const ModalTitle = styled.Text`
+  font-family: 'Inter-Medium';
+  font-size: 24px;
+  line-height: 28.13px;
+  text-align: center;
+  color: #fff;
+
+  margin-top: 24px;
+  margin-bottom: 8px;
+`;
+
+export const ModalText = styled.Text`
+  font-family: 'Inter-Regular';
+  font-size: 12px;
+  line-height: 14.06px;
+  text-align: center;
+  color: #f7f5fa;
+`;
