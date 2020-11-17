@@ -30,7 +30,9 @@ export default class FakeUsersRepository implements IUsersRepository {
   }
 
   public async findById(id: string): Promise<User | undefined> {
-    const user = this.users.find(eachUser => eachUser.id === id);
+    const user = this.users.find(
+      eachUser => eachUser.id === id && !eachUser.deleted_at,
+    );
     return user;
   }
 

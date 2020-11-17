@@ -51,6 +51,9 @@ describe('ListUnfinishedDeliveries', () => {
       deliveryman_id: deliveryman.id,
     });
 
+    delivery2.start_date = new Date();
+    await fakeDeliveriesRepository.save(delivery2);
+
     const delivery3 = await fakeDeliveriesRepository.create({
       address: 'Random address',
       city: 'Random city',
