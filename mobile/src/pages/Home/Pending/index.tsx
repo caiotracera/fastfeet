@@ -88,6 +88,7 @@ const Pending: React.FC = () => {
   }, []);
 
   const labels = ['Aguardando', 'Retirado', 'Entregue'];
+
   return (
     <>
       <Container keyboardShouldPersistTaps="always">

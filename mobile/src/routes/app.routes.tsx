@@ -35,7 +35,7 @@ const AppRoutes: React.FC = () => (
       name="DeliveryDetails"
       component={DeliveryDetails}
       options={{
-        ...TransitionPresets.SlideFromRightIOS,
+        ...TransitionPresets.ModalPresentationIOS,
         animationEnabled: true,
       }}
     />
