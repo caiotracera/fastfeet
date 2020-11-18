@@ -172,7 +172,11 @@ const SignIn: React.FC = () => {
       </ScrollView>
 
       <View>
-        <Modal isVisible={modalVisible} onModalShow={handleCloseModal}>
+        <Modal
+          isVisible={modalVisible}
+          onModalShow={handleCloseModal}
+          animationIn="tada"
+        >
           <ModalContainer>
             <Image source={erroImage} />
             <ModalTitle>

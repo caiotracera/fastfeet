@@ -1,3 +1,4 @@
+import { Dimensions } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import styled, { css } from 'styled-components/native';
 
@@ -137,4 +138,6 @@ export const ModalText = styled.Text`
   line-height: 14.06px;
   text-align: center;
   color: #f7f5fa;
+
+  max-width: ${Dimensions.get('screen').width / 2}px;
 `;

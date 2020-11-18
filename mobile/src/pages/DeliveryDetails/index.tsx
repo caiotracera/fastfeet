@@ -9,6 +9,7 @@ import api from '../../services/api';
 
 import Header from '../../components/Header';
 import doneImage from '../../assets/images/feito.png';
+import erroImage from '../../assets/images/erro.png';
 
 import {
   Container,
@@ -47,7 +48,9 @@ interface IDelivery {
 
 const DeliveryDetails: React.FC = () => {
   const [delivery, setDelivery] = useState<IDelivery>();
-  const [modalVisible, setModalVisible] = useState(false);
+  const [successModalVisible, setSuccessModalVisible] = useState(false);
+  const [errorModalVisible, setErrorModalVisible] = useState(false);
+  const [erroMessage, setErrorMessage] = useState();
 
   const navigation = useNavigation();
   const route = useRoute();
@@ -59,15 +62,29 @@ const DeliveryDetails: React.FC = () => {
   }, [delivery_id, navigation]);
 
   const handleStartDelivery = useCallback(async () => {
-    const response = await api.put(`deliveries/${delivery_id}`);
-    setModalVisible(true);
-    setDelivery(response.data);
+    try {
+      const response = await api.put(`deliveries/${delivery_id}`);
+      setSuccessModalVisible(true);
+      setDelivery(response.data);
+    } catch (error) {
+      setErrorModalVisible(true);
+      setErrorMessage(error.response.data.message);
+    }
+  }, [delivery_id]);
 
+  const handleCloseSuccessModal = useCallback(() => {
     setTimeout(() => {
-      setModalVisible(false);
-      navigation.navigate('DeliveryDetails', { delivery_id });
+      setSuccessModalVisible(false);
     }, 2000);
+
+    navigation.navigate('DeliveryDetails', { delivery_id });
   }, [delivery_id, navigation]);
+
+  const handleCloseErrorModal = useCallback(() => {
+    setTimeout(() => {
+      setErrorModalVisible(false);
+    }, 2000);
+  }, []);
 
   navigation.addListener('focus', () => {
     api.get(`deliveries/${delivery_id}`).then((response) => {
@@ -182,11 +199,29 @@ const DeliveryDetails: React.FC = () => {
       )}
 
       <View>
-        <Modal isVisible={modalVisible}>
+        <Modal
+          isVisible={successModalVisible}
+          onModalShow={handleCloseSuccessModal}
+        >
           <ModalContainer>
             <Image source={doneImage} />
             <ModalTitle>Pacote retirado.</ModalTitle>
             <ModalText>Só falta entregar :)</ModalText>
+          </ModalContainer>
+        </Modal>
+      </View>
+
+      <View>
+        <Modal
+          isVisible={errorModalVisible}
+          onModalShow={handleCloseErrorModal}
+          animationIn="tada"
+          backdropTransitionOutTiming={700}
+        >
+          <ModalContainer>
+            <Image source={erroImage} />
+            <ModalTitle>Ooops!</ModalTitle>
+            <ModalText>{erroMessage}</ModalText>
           </ModalContainer>
         </Modal>
       </View>
