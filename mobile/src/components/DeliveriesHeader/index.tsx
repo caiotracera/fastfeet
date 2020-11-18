@@ -34,26 +34,12 @@ interface LocationProps {
   longitude: number;
 }
 
-const data = [
-  {
-    id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
-    title: 'First Item',
-  },
-  {
-    id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
-    title: 'Second Item',
-  },
-  {
-    id: '58694a0f-3da1-471f-bd96-145571e29d72',
-    title: 'Third Item',
-  },
-];
-
 const DeliveriesHeader: React.FC = () => {
   const [userPosition, setUserPosition] = useState({} as LocationProps);
   const [userLocation, setUserLocation] = useState();
   const [searchedTerm, setSearchedTerm] = useState<String>();
   const [hasSearchTerm, setHasSearchedTerm] = useState(false);
+  const [cities, setCities] = useState<string[]>();
 
   const { user, signOut } = useAuth();
 
@@ -78,10 +64,13 @@ const DeliveriesHeader: React.FC = () => {
     }
   }, [userPosition.latitude, userPosition.longitude]);
 
-  const handleOnChangeText = useCallback((text) => {
+  const handleOnChangeText = useCallback(async (text) => {
     if (text) {
       setHasSearchedTerm(true);
       setSearchedTerm(text);
+
+      const response = await api.get(`cities?term=${text}`);
+      setCities(response.data);
     } else {
       setHasSearchedTerm(false);
     }
@@ -121,23 +110,23 @@ const DeliveriesHeader: React.FC = () => {
           <RightIcon name="search" size={20} color="#ffc042" />
         </SearchInputContainer>
 
-        {data && hasSearchTerm && (
+        {cities && hasSearchTerm && (
           <FlatList
-            data={data}
+            data={cities}
             renderItem={({ item }) => (
               <TouchableWithoutFeedback
                 onPress={() => {
-                  console.log(item.title);
+                  console.log(item);
                 }}
                 style={{ width: 350 }}
               >
-                <SugestContainer key={item.id}>
-                  <SugestText>{item.title}</SugestText>
+                <SugestContainer key={item}>
+                  <SugestText>{item}</SugestText>
                   <FeatherIcon name="map-pin" size={20} color="#ffc042" />
                 </SugestContainer>
               </TouchableWithoutFeedback>
             )}
-            keyExtractor={(item) => item.id}
+            keyExtractor={(item) => item}
           />
         )}
       </SearchContainer>
