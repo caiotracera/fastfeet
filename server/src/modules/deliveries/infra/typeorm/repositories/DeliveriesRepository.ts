@@ -67,7 +67,7 @@ export default class DeliveriesRepository implements IDeliveriesRepository {
     const deliveries = await this.ormRepository.find({
       where: {
         deliveryman_id,
-        date: Raw(
+        start_date: Raw(
           dateFieldName =>
             `to_char(${dateFieldName}, 'DD-MM-YYYY') = '${parsedDay}-${parsedMonth}-${year}'`,
         ),

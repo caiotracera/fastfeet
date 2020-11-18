@@ -1,4 +1,5 @@
 import { inject, injectable } from 'tsyringe';
+import { Ingest } from 'sonic-channel';
 
 import AppError from '@shared/errors/AppError';
 
@@ -54,6 +55,28 @@ export default class CreateDeliveryService {
       state,
       deliveryman_id,
     });
+
+    const sonicChannelIngest = new Ingest({
+      host: 'localhost',
+      port: 1491,
+      auth: 'SecretPassword',
+    });
+
+    sonicChannelIngest.connect({
+      connected: () => {
+        console.log('Sonic connected');
+      },
+    });
+
+    await sonicChannelIngest.push(
+      'cities',
+      'default',
+      `${city.split(' ').join('_')}`,
+      `${city}`,
+      {
+        lang: 'por',
+      },
+    );
 
     return delivery;
   }

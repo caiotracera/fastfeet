@@ -13,3 +13,4 @@ tmp/uploads/*
 .env
 ormconfig.json
 src/modules/deliveries.old
+src/shared/infra/sonic/store
