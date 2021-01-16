@@ -42,7 +42,7 @@
     "react-native-step-indicator": "^1.0.3",
     "react-native-vector-icons": "^7.1.0",
     "styled-components": "^5.2.1",
-    "yup": "^0.29.3"
+    "yup": "0.32.1"
   },
   "devDependencies": {
     "@babel/core": "^7.8.4",
